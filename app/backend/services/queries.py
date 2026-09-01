@@ -526,6 +526,38 @@ class JobQueries:
             )
         return output
 
+
+    def historical_runtime_median(self, *, mode: str, limit: int = 120) -> float | None:
+        """Median wall-time (seconds) for completed jobs of same mode, recent first.
+        Returns None if fewer than 3 samples (too noisy)."""
+        try:
+            with self._connect() as conn:
+                rows = conn.execute(
+                    """SELECT
+                        (julianday(finished_at) - julianday(started_at)) * 86400.0 AS runtime
+                    FROM jobs
+                    WHERE status = 'completed'
+                      AND mode = ?
+                      AND started_at != ''
+                      AND finished_at != ''
+                      AND finished_at > started_at
+                    ORDER BY finished_at DESC
+                    LIMIT ?""",
+                    (str(mode or ""), int(limit)),
+                ).fetchall()
+        except Exception:
+            return None
+        vals = [float(r[0]) for r in rows if r and r[0] is not None and float(r[0]) > 0]
+        if len(vals) < 3:
+            return None
+        vals.sort()
+        mid = len(vals) // 2
+        if len(vals) % 2:
+            return vals[mid]
+        return (vals[mid - 1] + vals[mid]) / 2.0
+
+
+
     def update_scan_summary(
         self,
         job_id: str,

@@ -1100,11 +1100,16 @@ function renderJobs() {
       const meta = MODE_META[workflow];
       const progress = jobProgress(job);
       const status = normalizeStatus(job.status);
+      const isActive = ['created', 'queued', 'running'].includes(status);
+      const etaSpan = isActive
+        ? `<span class="job-eta" data-eta-job="${escapeHtml(job.id)}"><span class="job-eta-label">เหลือ</span><span class="job-eta-value">—</span></span>`
+        : '';
       return `<article class="job-row" data-open-job="${escapeHtml(job.id)}">
         <span class="job-mode-icon ${workflow === 'silence' ? 'silence' : ''}">${icon(meta.icon)}</span>
         <span class="job-primary"><strong>${escapeHtml(job.name || job.id)}</strong><small>${escapeHtml(meta.title)} · ${formatDate(job.created_at)}</small></span>
         <span class="job-progress-wrap"><span class="job-progress-copy"><i>${escapeHtml(jobStage(job))}</i><b>${progress}%</b></span><span class="job-progress-track"><span style="width:${progress}%"></span></span></span>
         <span class="job-time"><strong>${job.result?.elapsed || job.result?.elapsed_str || '—'}</strong><span>เวลาประมวลผล</span></span>
+        ${etaSpan}
         <span class="status-chip ${status}">${statusLabel(status)}</span>
         <span class="row-actions"><button class="row-menu-button" data-open-job="${escapeHtml(job.id)}" aria-label="รายละเอียด">${icon('i-more')}</button></span>
       </article>`;
@@ -1121,6 +1126,126 @@ function renderJobs() {
   const removed = state.jobs.reduce((sum, job) => sum + Number(job.result?.runtime_metrics?.removed_duration_sec || job.result?.runtime_metrics?.removed_duration || 0), 0);
   byId('stat-removed').textContent = removed > 0 ? formatDuration(removed) : '0 นาที';
   byId('jobs-updated').textContent = `อัปเดตล่าสุด ${new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}`;
+  // Fetch ETA for active jobs
+  refreshJobEtas();
+  refreshJobSseSubscriptions();
+}
+
+
+const _etaCache = new Map();  // job_id -> {eta, fetched_at}
+const _etaPollIntervalMs = 8000;
+let _etaPollTimer = null;
+
+async function refreshJobEtas() {
+  if (DEMO_MODE) return;
+  const activeJobs = (state.jobs || []).filter(j => ['created', 'queued', 'running'].includes(normalizeStatus(j.status)));
+  if (!activeJobs.length) {
+    document.querySelectorAll('[data-eta-job]').forEach(el => { el.querySelector('.job-eta-value').textContent = '—'; });
+    return;
+  }
+  for (const job of activeJobs) {
+    fetchJobEta(job.id).catch(() => {});
+  }
+}
+
+async function fetchJobEta(jobId) {
+  const el = document.querySelector(`[data-eta-job="${jobId}"] .job-eta-value`);
+  if (!el) return;
+  // Throttle: skip if cached < 5s ago
+  const cached = _etaCache.get(jobId);
+  if (cached && (Date.now() - cached.fetched_at) < 5000) {
+    el.textContent = cached.text;
+    return;
+  }
+  try {
+    const r = await api(`/api/jobs/${encodeURIComponent(jobId)}/eta`);
+    if (!r || !r.ok) return;
+    let text = '—';
+    if (r.eta_formatted) text = r.eta_formatted;
+    else if (r.eta_seconds != null) text = r.eta_seconds + 's';
+    el.textContent = text;
+    _etaCache.set(jobId, { text, fetched_at: Date.now() });
+  } catch (e) {
+    el.textContent = '—';
+  }
+}
+
+
+// === SSE Manager for live progress (v2.3.1) ===
+const _sseConnections = new Map();  // job_id -> EventSource
+
+function openJobSse(jobId) {
+  if (_sseConnections.has(jobId)) return;  // already connected
+  try {
+    const url = `/api/jobs/${encodeURIComponent(jobId)}/stream`;
+    const es = new EventSource(url);
+    _sseConnections.set(jobId, es);
+    es.addEventListener('error', () => {
+      // Reconnect after 3s
+      es.close();
+      _sseConnections.delete(jobId);
+      setTimeout(() => {
+        const active = (state.jobs || []).find(j => j.id === jobId && ['created','queued','running'].includes(normalizeStatus(j.status)));
+        if (active) openJobSse(jobId);
+      }, 3000);
+    });
+    es.onmessage = (ev) => {
+      try {
+        const data = JSON.parse(ev.data);
+        const el = document.querySelector(`[data-eta-job="${jobId}"] .job-eta-value`);
+        if (el && data.eta_seconds != null) {
+          // Format like the API does
+          if (data.eta_seconds === 0) {
+            el.textContent = data.stage || 'เกือบเสร็จ';
+          } else if (data.eta_seconds < 60) {
+            el.textContent = `อีก ${data.eta_seconds} วิ`;
+          } else if (data.eta_seconds < 3600) {
+            const m = Math.floor(data.eta_seconds / 60);
+            el.textContent = `อีก ${m} นาที`;
+          } else {
+            const h = Math.floor(data.eta_seconds / 3600);
+            el.textContent = `อีก ${h} ชม.`;
+          }
+        }
+        // Also update progress bar if visible
+        const wrap = document.querySelector(`[data-eta-job="${jobId}"]`);
+        if (wrap) {
+          wrap.setAttribute('data-confidence', data.is_running ? 'high' : 'low');
+        }
+        if (data.progress != null) {
+          const bar = document.querySelector(`[data-open-job="${jobId}"] .job-progress-track span`);
+          if (bar) bar.style.width = data.progress + '%';
+          const pct = document.querySelector(`[data-open-job="${jobId}"] .job-progress-copy b`);
+          if (pct) pct.textContent = Math.round(data.progress) + '%';
+        }
+      } catch (e) { /* ignore */ }
+    };
+  } catch (e) {
+    console.warn('SSE failed for', jobId, e);
+  }
+}
+
+function closeJobSse(jobId) {
+  const es = _sseConnections.get(jobId);
+  if (es) {
+    es.close();
+    _sseConnections.delete(jobId);
+  }
+}
+
+function refreshJobSseSubscriptions() {
+  if (DEMO_MODE) return;
+  const active = new Set();
+  for (const job of (state.jobs || [])) {
+    if (['created', 'queued', 'running'].includes(normalizeStatus(job.status))) {
+      active.add(job.id);
+      openJobSse(job.id);
+    }
+  }
+  // Close SSEs for jobs no longer active
+  for (const jobId of Array.from(_sseConnections.keys())) {
+    if (!active.has(jobId)) closeJobSse(jobId);
+  }
 }
 
 function checkJobTransitions(jobs) {
@@ -1133,6 +1258,7 @@ function checkJobTransitions(jobs) {
 }
 
 async function loadJobs({ silent = false } = {}) {
+  await refreshJobEtas();
   try {
     if (!DEMO_MODE) {
       const payload = await api('/api/jobs?limit=100');

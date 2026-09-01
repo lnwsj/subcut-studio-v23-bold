@@ -669,3 +669,40 @@ body.busy button { pointer-events: none; }
   .member-actions { grid-column: 1 / -1; justify-content: stretch; }
   .member-action { flex: 1; }
 }
+
+
+/* === ETA badge (subcut v2.3) === */
+.job-eta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 78px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(106,92,255,.10), rgba(58,168,255,.10));
+  border: 1px solid rgba(106,92,255,.18);
+  font-size: 12px;
+  line-height: 1.2;
+  margin-left: 4px;
+}
+.job-eta-label {
+  font-size: 10px;
+  color: #6a5cff;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-weight: 600;
+}
+.job-eta-value {
+  font-weight: 700;
+  color: #1f1933;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.job-eta[data-confidence="high"] .job-eta-value { color: #16a34a; }
+.job-eta[data-confidence="medium"] .job-eta-value { color: #ca8a04; }
+.job-eta[data-confidence="low"] .job-eta-value { color: #94a3b8; }
+@media (max-width: 680px) {
+  .job-eta { min-width: 60px; padding: 3px 6px; }
+  .job-eta-label { font-size: 9px; }
+  .job-eta-value { font-size: 11px; }
+}

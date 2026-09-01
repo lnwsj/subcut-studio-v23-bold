@@ -9,6 +9,7 @@ editor modules are not installed.
 from __future__ import annotations
 
 import hashlib
+import asyncio
 import json
 import math
 import os
@@ -21,7 +22,7 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 
 from ._auth_guard import require_request_user, user_id_from_user
 from ...config import CHUNK_SIZE, LEGACY_UI_JOBS_DIR, USER_WORKSPACE_ROOT
@@ -469,6 +470,82 @@ def list_jobs(
     return {"ok": True, "total": len(rows), "jobs": rows}
 
 
+@router.get("/api/jobs/{job_id}/eta")
+def job_eta(
+    job_id: str,
+    current_user: dict = Depends(require_request_user),
+) -> dict[str, Any]:
+    """Return ETA estimate (seconds) blended 0.65 live + 0.35 historical median."""
+    user_id = user_id_from_user(current_user)
+    store = _get_store()
+    job = _owned_job(store, str(job_id), int(user_id))
+
+    live_remaining = None
+    scan_summary = {}
+    raw = job.get("scan_summary_json") or "{}"
+    try:
+        if isinstance(raw, str):
+            scan_summary = json.loads(raw)
+        elif isinstance(raw, dict):
+            scan_summary = dict(raw)
+    except Exception:
+        scan_summary = {}
+    if isinstance(scan_summary, dict):
+        try:
+            lr = scan_summary.get("eta_live_remaining")
+            if lr is not None:
+                live_remaining = float(lr)
+        except Exception:
+            live_remaining = None
+
+    historical = store.historical_runtime_median(mode=job.get("mode", ""), limit=120) if hasattr(store, "historical_runtime_median") else None
+
+    blended = None
+    confidence = "low"
+    if live_remaining is not None and historical is not None:
+        blended = 0.65 * live_remaining + 0.35 * historical
+        confidence = "high"
+    elif historical is not None:
+        blended = historical
+        confidence = "medium"
+    elif live_remaining is not None:
+        blended = live_remaining
+        confidence = "low"
+
+    if blended is not None:
+        blended = min(blended, 7200.0)
+
+    status = str(job.get("status") or "")
+    is_running = status in {"running", "processing"}
+
+    def _format_eta(seconds: int) -> str:
+        if seconds < 60:
+            return f"อีก {seconds} วินาที"
+        if seconds < 3600:
+            m = seconds // 60
+            s = seconds % 60
+            if s == 0:
+                return f"อีก {m} นาที"
+            return f"อีก {m} นาที {s} วิ"
+        h = seconds // 3600
+        mm = (seconds % 3600) // 60
+        if mm == 0:
+            return f"อีก {h} ชั่วโมง"
+        return f"อีก {h} ชั่วโมง {mm} นาที"
+
+    return {
+        "ok": True,
+        "eta_seconds": int(blended) if blended is not None else None,
+        "eta_formatted": _format_eta(int(blended)) if blended is not None else None,
+        "live_remaining": int(live_remaining) if live_remaining is not None else None,
+        "historical_remaining": int(historical) if historical is not None else None,
+        "confidence": confidence,
+        "is_running": is_running,
+        "progress": scan_summary.get("progress", 0) if isinstance(scan_summary, dict) else 0,
+        "stage": scan_summary.get("stage", "") if isinstance(scan_summary, dict) else "",
+    }
+
+
 @router.get("/api/jobs/{job_id}")
 def get_job(job_id: str, current_user: dict = Depends(require_request_user)) -> dict[str, Any]:
     store = _get_store()
@@ -834,3 +911,102 @@ def download_one_output(
     if any(part.startswith(".") or part == "trim_work" for part in target.relative_to(output_root).parts):
         raise HTTPException(status_code=404, detail="Output file not found")
     return FileResponse(path=str(target), filename=target.name, media_type="application/octet-stream")
+
+
+
+@router.get("/api/jobs/{job_id}/stream")
+async def job_progress_stream(
+    job_id: str,
+    current_user: dict = Depends(require_request_user),
+    request: Request = None,  # injected by FastAPI
+) -> StreamingResponse:
+    """Server-Sent Events stream for job progress + ETA updates.
+    
+    Emits JSON events: {type: "progress"|"done"|"failed", progress, stage, eta, ...}
+    Closes when client disconnects or job reaches terminal state.
+    """
+    user_id = user_id_from_user(current_user)
+    store = _get_store()
+    job = _owned_job(store, str(job_id), int(user_id))
+    job_id = str(job.get("id") or job_id)
+    
+    async def event_generator() -> "AsyncIterator[bytes]":
+        last_event_id = 0
+        last_state = ""
+        # Send initial state
+        try:
+            yield f"event: snapshot\ndata: {json.dumps(_job_progress_payload(store, job_id))}\n\n".encode("utf-8")
+        except Exception:
+            pass
+        while True:
+            if await request.is_disconnected():
+                break
+            try:
+                job_row = store.get_job(job_id, user_id=user_id)
+                if not job_row:
+                    yield b'event: error\ndata: {"detail":"job_not_found"}\n\n'
+                    break
+                status = str(job_row.get("status") or "")
+                # Read scan_summary_json
+                raw = job_row.get("scan_summary_json") or "{}"
+                summary = {}
+                try:
+                    if isinstance(raw, str):
+                        summary = json.loads(raw) if raw else {}
+                except Exception:
+                    pass
+                payload = _job_progress_payload(store, job_id, summary=summary, status=status)
+                # Only emit if state changed
+                state_key = f"{payload.get('progress')}|{payload.get('stage')}|{payload.get('eta_seconds')}|{status}"
+                if state_key != last_state:
+                    last_state = state_key
+                    yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n".encode("utf-8")
+                # Terminal state? Send done + close
+                if status in ("done", "completed", "failed", "error", "cancelled"):
+                    yield b"event: end\ndata: {}\n\n"
+                    break
+            except Exception as e:
+                yield f'event: error\ndata: {{"detail": "{str(e)}"}}\n\n'.encode("utf-8")
+                break
+            await asyncio.sleep(1.0)
+    
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        },
+    )
+
+
+def _job_progress_payload(store, job_id: str, summary: dict | None = None, status: str | None = None) -> dict:
+    """Build the progress payload for SSE."""
+    if summary is None or status is None:
+        try:
+            job_row = store.get_job(job_id, user_id=0) or {}
+        except Exception:
+            job_row = {}
+        if summary is None:
+            raw = job_row.get("scan_summary_json") or "{}"
+            try:
+                summary = json.loads(raw) if isinstance(raw, str) else dict(raw)
+            except Exception:
+                summary = {}
+        if status is None:
+            status = str(job_row.get("status") or "")
+    progress = float(summary.get("progress", 0)) if isinstance(summary, dict) else 0.0
+    stage = str(summary.get("stage", "")) if isinstance(summary, dict) else ""
+    eta_live = summary.get("eta_live_remaining") if isinstance(summary, dict) else None
+    return {
+        "type": "done" if status in ("done", "completed") else ("failed" if status in ("failed", "error") else "progress"),
+        "job_id": job_id,
+        "status": status,
+        "progress": progress,
+        "stage": stage,
+        "eta_seconds": int(eta_live) if eta_live is not None else None,
+        "is_running": status in ("running", "processing", "queued", "created"),
+    }
+
+

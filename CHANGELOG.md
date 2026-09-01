@@ -52,3 +52,23 @@
 ### Branded & Verified
 - Cutdee brand (logo + favicon) คงอยู่บน SubCut v2.3
 - SubCut v2.3 ทำงานบน `https://subfree.cutdee.com/` (Let's Encrypt SSL)
+
+## 2.3.2 — Live ETA + Server-Sent Events (2026-09-01)
+
+### New Features
+- **ETA blending (live 0.65 + historical 0.35)**: Worker now emits live ETA based on elapsed time vs progress, blended with median runtime of last 120 completed jobs of same mode
+- **Server-Sent Events stream**: `GET /api/jobs/{job_id}/stream` returns `text/event-stream` with progress + ETA updates, replaces polling
+- **ETA badge in queue UI**: Each active job shows "อีก X นาที" badge with color-coded confidence
+- **CaptionCut mirror**: Live ETA blend in worker._update() (0.7 live + 0.3 static fallback)
+- **CaptionCut SSE endpoint**: Same pattern, deployed on port 21000
+
+### API endpoints
+- `GET /api/jobs/{id}/eta` → `{eta_seconds, eta_formatted, live_remaining, historical_remaining, confidence, is_running, progress, stage}`
+- `GET /api/jobs/{id}/stream` → text/event-stream emitting `{type, status, progress, stage, eta_seconds, is_running}`
+
+### Files
+- `app/backend/services/subcut_worker.py` (+stage-to-percent mapping for smoother progress)
+- `app/backend/services/queries.py` (+`historical_runtime_median()`)
+- `app/backend/api/routes/subcut_api.py` (+`/eta` +`/stream` endpoints)
+- `app/frontend/static/app.js` (+ETA badge in job row + EventSource SSE manager)
+- `app/frontend/static/app.css` (+ETA badge styles)

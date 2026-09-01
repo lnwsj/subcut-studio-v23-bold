@@ -3,6 +3,7 @@
 """Background worker dedicated to SJ88 SubCut Studio jobs."""
 
 from __future__ import annotations
+from datetime import datetime
 
 import logging
 import shutil
@@ -24,6 +25,24 @@ from .subtitle_trim_settings import build_runtime_subtitle_trim_settings
 logger = logging.getLogger("sj88.subcut.worker")
 _INPUT_MANIFEST = ".autosu_only_inputs.json"
 _SUBCUT_MODES = ("autosu_only", "silence_trim_only")
+
+
+def _parse_iso(value):
+    """Parse ISO timestamp to epoch seconds. Handles ...Z and +00:00 forms."""
+    if not value or not isinstance(value, str):
+        return None
+    s = value.strip()
+    if not s:
+        return None
+    try:
+        if s.endswith("Z"):
+            s = s[:-1] + "+00:00"
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            return dt.timestamp()
+        return dt.astimezone().timestamp()
+    except Exception:
+        return None
 
 
 class _LeaseHeartbeat(threading.Thread):
@@ -155,12 +174,28 @@ class SubCutWorker(threading.Thread):
         current: int = 0,
         total: int = 0,
     ) -> None:
+        percent_clamped = max(0, min(99, int(percent)))
         payload = {
-            "progress": max(0, min(99, int(percent))),
+            "progress": percent_clamped,
             "stage": str(stage)[:160],
             "current": max(0, int(current)),
             "total": max(0, int(total)),
         }
+        # Live ETA: based on elapsed time vs percent done
+        # Only emit if percent >= 3 and not noise (skip if no started_at or very early)
+        try:
+            if percent_clamped >= 3 and percent_clamped < 99:
+                row = self.store.get_job(job_id) if hasattr(self.store, "get_job") else None
+                if row and row.get("started_at"):
+                    started = _parse_iso(row["started_at"])
+                    if started:
+                        elapsed = max(0.0, time.time() - started)
+                        live_remaining = elapsed * (100.0 - percent_clamped) / max(percent_clamped, 1.0)
+                        payload["eta_seconds"] = max(0, int(live_remaining))
+                        payload["eta_live_remaining"] = max(0, int(live_remaining))
+                        payload["eta_computed_at"] = time.time()
+        except Exception:
+            logger.debug("Live ETA calc skipped for job=%s", job_id)
         try:
             self.store.update_scan_summary(job_id, payload, run_token=run_token)
         except Exception:
@@ -610,16 +645,41 @@ class SubCutWorker(threading.Thread):
         file_base_percent = {"value": 12}
         file_total = max(1, len(sources))
 
+        # Stage-to-percent mapping for smoother progress updates (enables live ETA)
+        _STAGE_PCT = {
+            "เตรียมระบบเข้ารหัสวิดีโอ": 18,
+            "กำลังถอดเสียง": 35,
+            "Whisper": 45,
+            "เตรียม ASS": 70,
+            "karaoke": 72,
+            "ffmpeg": 85,
+            "burn": 88,
+        }
+        _last_stage_pct = {"v": 15}
+
+        def _stage_pct(stage_text: str) -> int:
+            """Map Thai stage text to a percent. Increment within same stage."""
+            for key, pct in _STAGE_PCT.items():
+                if key in (stage_text or ""):
+                    if pct > _last_stage_pct["v"]:
+                        _last_stage_pct["v"] = pct
+                    else:
+                        # Same stage: bump by 1% (capped) for visual feedback
+                        _last_stage_pct["v"] = min(pct + 3, _last_stage_pct["v"] + 2)
+                    return _last_stage_pct["v"]
+            # Unknown stage: gentle increment
+            _last_stage_pct["v"] = min(95, _last_stage_pct["v"] + 1)
+            return _last_stage_pct["v"]
+
         def status_callback(stage: str) -> None:
             """Update detailed status (Thai stage text) for the current file."""
             try:
-                idx = sources.index(sources[0]) + 1  # always 1 for single-file case
+                idx = sources.index(sources[0]) + 1
             except Exception:
                 idx = 1
-            # Keep percent in 15..90 range while stage messages flow
             self._progress(
                 job_id,
-                percent=15,
+                percent=_stage_pct(stage),
                 stage=stage,
                 run_token=run_token,
                 current=idx,
