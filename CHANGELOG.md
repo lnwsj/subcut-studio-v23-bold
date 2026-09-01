@@ -72,3 +72,33 @@
 - `app/backend/api/routes/subcut_api.py` (+`/eta` +`/stream` endpoints)
 - `app/frontend/static/app.js` (+ETA badge in job row + EventSource SSE manager)
 - `app/frontend/static/app.css` (+ETA badge styles)
+
+## 2.3.3 — Pathumma Whisper Thai (2026-09-01)
+
+### Major: Switch ASR backend to Pathumma Whisper Thai
+- **Model**: `nectec/Pathumma-whisper-th-large-v3` (Whisper Large-v3 fine-tuned on Thai by NECTEC)
+- **Backend**: `hf_transformers` (uses `transformers` library, not faster-whisper)
+- **Accuracy gain** (vs `Systran/faster-whisper-large-v3`):
+  - "ใครรอโปร" → correctly "ใครรอโปร" (was "ใครรอโปรด" with extra sound)
+  - "โซล่าเซลล์" → correctly spelled with double ล (was "โซล่าเซล")
+  - "80,000 วัตต์" → reads as Thai "แปดหมื่นดับเบิ้ลยูอาร์" (was "80,000")
+  - Natural phrase grouping (no over-segmentation)
+
+### Config changes
+- `APP_WHISPER_MODEL_001_BACKEND=hf_transformers` (was `faster_whisper`)
+- `APP_WHISPER_MODEL_001_SOURCE=/opt/sj88-subcut-studio/app/models/whisper/pathumma-hf` (local path, ~3GB)
+- `APP_WHISPER_MODEL_001_DTYPE=float16`
+- `APP_WHISPER_MODEL_001_LABEL=Pathumma Whisper Thai Large-v3 (GPU)`
+
+### Files added
+- `app/models/whisper/pathumma-hf/` — Full Pathumma model (3GB safetensors + tokenizer)
+  - `model.safetensors` (2944 MB)
+  - `tokenizer_config.json`, `vocab.json`, `merges.txt`, `special_tokens_map.json`
+  - `normalizer.json`, `preprocessor_config.json`, `config.json`
+  - `generation_config.json`
+
+### Notes
+- Pathumma is incompatible with faster-whisper (outputs English, not Thai) — needs transformers pipeline
+- hf_transformers backend is already built into SubCut v2.3 — just changed .env to use it
+- Local path required because HF download URL is slow (3GB takes ~80s)
+- Word-level timestamps (karaoke) doesn't work for Thai — line-based subtitles still work
