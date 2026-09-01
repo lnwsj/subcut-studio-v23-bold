@@ -1,0 +1,16 @@
+# Web/API
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+pydantic>=2.7,<3
+python-multipart>=0.0.20,<1
+requests>=2.31,<3
+PyMySQL>=1.1.1,<2
+
+# Subtitle engine
+# Install the PyTorch build matching your CUDA version before this file on NVIDIA servers.
+numpy==2.4.6
+numba==0.65.1
+llvmlite==0.47.0
+openai-whisper==20250625
+pythainlp>=5.0.4,<6
+python-crfsuite>=0.9.11,<1

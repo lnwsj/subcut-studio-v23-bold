@@ -1,0 +1,301 @@
+/* ============================================================
+   Subtitle Template Dropdown with Live Previews
+   Replaces native <select id="subtitle-template"> with a custom
+   component that shows a visual preview of each subtitle style.
+   ============================================================ */
+
+.template-dd {
+  position: relative;
+  width: 100%;
+  font-family: inherit;
+}
+
+.template-dd-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: #ffffff;
+  border: 1.5px solid #e4e2f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-size: 14px;
+  color: #1f1933;
+  text-align: left;
+}
+.template-dd-trigger:hover { border-color: #a8a2cc; }
+.template-dd-trigger:focus,
+.template-dd.open .template-dd-trigger {
+  border-color: #6a5cff;
+  box-shadow: 0 0 0 3px rgba(106, 92, 255, 0.15);
+  outline: none;
+}
+
+.template-dd-preview {
+  flex: 0 0 auto;
+  width: 96px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1a1530 0%, #2d2350 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.template-dd-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.template-dd-label .label-name {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  color: #1f1933;
+}
+.template-dd-label .label-desc {
+  font-size: 11px;
+  color: #6a6580;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.template-dd-caret {
+  flex: 0 0 auto;
+  color: #6a6580;
+  transition: transform 0.15s;
+}
+.template-dd.open .template-dd-caret { transform: rotate(180deg); }
+
+/* --- Dropdown panel --- */
+.template-dd-panel {
+  position: absolute;
+  z-index: 50;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 440px;
+  max-width: 520px;
+  background: #ffffff;
+  border: 1px solid #e4e2f0;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(20, 13, 60, 0.18), 0 2px 8px rgba(20, 13, 60, 0.08);
+  padding: 6px;
+  max-height: 460px;
+  overflow-y: auto;
+  display: none;
+}
+.template-dd.open .template-dd-panel { display: block; }
+
+.template-dd-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.12s;
+  border: 1.5px solid transparent;
+}
+.template-dd-option:hover { background: #f5f3ff; }
+.template-dd-option.selected {
+  background: linear-gradient(135deg, #ede9ff 0%, #e0d8ff 100%);
+  border-color: #c4b8ff;
+}
+.template-dd-option.selected .check-icon { color: #6a5cff; }
+
+.template-dd-option .template-dd-preview {
+  width: 120px;
+  height: 56px;
+}
+.template-dd-option .label-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1f1933;
+}
+.template-dd-option .label-desc {
+  font-size: 11px;
+  color: #6a6580;
+  margin-top: 2px;
+}
+.template-dd-option .check-icon {
+  margin-left: auto;
+  color: transparent;
+  flex-shrink: 0;
+}
+.template-dd-divider {
+  height: 1px;
+  background: #f0eef7;
+  margin: 4px 8px;
+}
+
+/* ============================================================
+   PREVIEW SWATCHES — miniature visual of each subtitle style
+   ============================================================ */
+
+.preview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: 'NotoSansThai', 'Noto Sans Thai', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* 1. default (Clean) — white text + thin black outline */
+.preview--default {
+  color: #ffffff;
+  text-shadow:
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000,
+     0 1px 2px rgba(0,0,0,0.5);
+}
+.preview--default::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, transparent 100%);
+}
+
+/* 2. yellow_pop — bold yellow + soft glow */
+.preview--yellow_pop {
+  color: #ffe84d;
+  font-weight: 900;
+  text-shadow:
+    0 0 0 #000,
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  1px 0 #000,
+     0 0 8px rgba(255, 232, 77, 0.6);
+  letter-spacing: 0.2px;
+}
+
+/* 3. box — white text on dark semi-transparent box */
+.preview--box {
+  position: relative;
+}
+.preview--box::before {
+  content: "";
+  position: absolute;
+  left: 6px; right: 6px; top: 6px; bottom: 6px;
+  background: rgba(20, 13, 60, 0.78);
+  border-radius: 4px;
+  backdrop-filter: blur(2px);
+  z-index: 0;
+}
+.preview--box > span {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* 4. karaoke_highlight — white spoken + cyan to-be */
+.preview--karaoke_highlight {
+  position: relative;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.preview--karaoke_highlight .sa { color: #ffffff; }
+.preview--karaoke_highlight .mp {
+  color: #4de8ff;
+  position: relative;
+}
+.preview--karaoke_highlight .mp::before {
+  content: "";
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 2px;
+  background: #4de8ff;
+  border-radius: 1px;
+}
+.preview--karaoke_highlight .le {
+  color: #ffffff;
+}
+
+/* 5. luxury_gold — gold text with rich shadow */
+.preview--luxury_gold {
+  color: #ffd166;
+  font-family: Georgia, 'Noto Serif Thai', serif;
+  font-style: italic;
+  text-shadow:
+    0 1px 0 #5a3700,
+    0 2px 0 #4a2c00,
+    0 3px 0 #3a2200,
+    0 4px 6px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.4px;
+}
+
+/* 6. comic_burst — white text + red thick outline + slight rotation */
+.preview--comic_burst {
+  color: #ffffff;
+  font-weight: 900;
+  font-style: italic;
+  transform: rotate(-2deg);
+  text-shadow:
+    -2px -2px 0 #ff3d00,
+     2px -2px 0 #ff3d00,
+    -2px  2px 0 #ff3d00,
+     2px  2px 0 #ff3d00,
+     0 4px 0 #c62800,
+     0 0 8px rgba(255, 61, 0, 0.4);
+  letter-spacing: 0.6px;
+}
+
+/* 7. random_mix — sparkle + dice */
+.preview--random_mix {
+  background: linear-gradient(135deg, #ffe84d 0%, #4de8ff 50%, #ff3d00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: italic;
+  position: relative;
+}
+.preview--random_mix::before {
+  content: "✨";
+  position: absolute;
+  font-size: 12px;
+  top: 2px;
+  right: 4px;
+  -webkit-text-fill-color: initial;
+  color: #ffd166;
+  filter: drop-shadow(0 0 2px rgba(255, 215, 100, 0.8));
+}
+.preview--random_mix::after {
+  content: "🎲";
+  position: absolute;
+  font-size: 10px;
+  bottom: 1px;
+  left: 4px;
+  -webkit-text-fill-color: initial;
+  color: #ffffff;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
+}
+
+/* --- Trigger check (when open) --- */
+.template-dd-caret svg { width: 16px; height: 16px; }
+
+/* --- Mobile --- */
+@media (max-width: 640px) {
+  .template-dd-option .template-dd-preview { width: 80px; height: 44px; }
+  .template-dd-trigger .template-dd-preview { width: 72px; height: 30px; }
+}
+
+/* --- Scoped under the form field to align --- */
+.field .template-dd { display: block; width: 100%; }
+.field > span + .template-dd { margin-top: 6px; }

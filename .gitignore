@@ -1,0 +1,92 @@
+# ======================================================================
+# SubCut Studio v2.3 Bold - .gitignore
+# ======================================================================
+
+# --- Secrets (NEVER commit) ---
+.env
+*.env
+!.env.example
+.env.local
+.env.production
+*.pem
+*.key
+*.crt
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# --- Virtual envs ---
+.venv/
+venv/
+env/
+ENV/
+.python-version
+pip-wheel-metadata/
+
+# --- Whisper / ML models (huge, regenerable) ---
+*.pt
+*.pth
+*.onnx
+*.bin
+models/
+whisper_models/
+*.tar.gz
+*.zip
+
+# --- Data (user data + jobs DB) ---
+data/
+app/data/
+*.db
+*.sqlite
+*.sqlite3
+jobs.db
+users.db
+
+# --- Uploaded media ---
+uploads/
+user_uploads/
+output/
+outputs/
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.mp3
+*.wav
+*.m4a
+*.srt
+*.vtt
+*.ass
+*.json
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+*.bak
+*.bak.*
+*.tmp
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Test artifacts ---
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.egg-info/
+build/
+dist/
+
+# --- App-specific runtime dirs ---
+app/models/
+app/pretrained/
+app/checkpoints/

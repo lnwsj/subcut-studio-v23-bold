@@ -1,0 +1,44 @@
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    env_file:
+      - ../app/.env
+    environment:
+      APP_ENABLE_WORKER: "0"
+      APP_PYTHON_WEB_HOST: 0.0.0.0
+      APP_PYTHON_WEB_PORT: "8787"
+    command: ["python", "app/main.py"]
+    ports:
+      - "8787:8787"
+    volumes:
+      - subcut-data:/srv/subcut/app/data
+      - whisper-models:/srv/subcut/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/api/health', timeout=5).read()"]
+      interval: 20s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+
+  worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    env_file:
+      - ../app/.env
+    environment:
+      APP_ENABLE_WORKER: "0"
+    command: ["python", "app/worker_main.py"]
+    volumes:
+      - subcut-data:/srv/subcut/app/data
+      - whisper-models:/srv/subcut/app/models
+    restart: unless-stopped
+    stop_grace_period: 30s
+    # NVIDIA: add `gpus: all` after installing NVIDIA Container Toolkit.
+
+volumes:
+  subcut-data:
+  whisper-models:

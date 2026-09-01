@@ -1,0 +1,43 @@
+.subtitle-editor-panel { width: min(1120px,100%); height: min(820px,calc(100vh - 40px)); padding: 0; overflow: hidden; display: grid; grid-template-rows: auto auto auto minmax(0,1fr) auto; }
+.subtitle-editor-panel > header { margin: 0; }
+.subtitle-editor-panel > header p { margin: 3px 0 0; color: #9296a8; font-size: 9px; }
+.subtitle-toolbar { min-height: 58px; padding: 10px 18px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--line); background: #fafbfe; }
+.subtitle-shift { margin-left: auto; display: flex; align-items: center; gap: 6px; color: #777b8e; font-size: 9px; }
+.subtitle-shift input { width: 76px; height: 34px; padding: 0 9px; border: 1px solid var(--line-strong); border-radius: 8px; }
+.subtitle-shift button { height: 34px; padding: 0 11px; color: #5449c4; background: var(--violet-soft); border-radius: 8px; font-weight: 700; }
+.subtitle-table-head, .subtitle-cue-row { display: grid; grid-template-columns: 42px 142px 142px minmax(260px,1fr) 38px; gap: 9px; align-items: center; }
+.subtitle-table-head { min-height: 34px; padding: 0 18px; color: #989cab; background: #fff; border-bottom: 1px solid var(--line); font-size: 8px; }
+.subtitle-cue-list { min-height: 0; overflow: auto; overscroll-behavior: contain; }
+.subtitle-cue-row { min-height: 76px; padding: 10px 18px; border-bottom: 1px solid var(--line); }
+.subtitle-cue-row:focus-within { background: #fbfaff; box-shadow: inset 3px 0 var(--violet); }
+.subtitle-cue-row > b { color: #989cac; font-size: 9px; text-align: center; }
+.subtitle-cue-row input, .subtitle-cue-row textarea { width: 100%; min-height: 38px; padding: 8px 10px; color: var(--ink); background: #fff; border: 1px solid var(--line-strong); border-radius: 8px; font: 500 10px/1.45 var(--font-body); }
+.subtitle-cue-row textarea { resize: vertical; min-height: 48px; }
+.subtitle-cue-row input:focus, .subtitle-cue-row textarea:focus { outline: 2px solid rgba(112,88,255,.16); border-color: #8d7cff; }
+.subtitle-cue-row > button { width: 34px; height: 34px; display: grid; place-items: center; color: #d95e64; background: #fff1f2; border-radius: 8px; }
+.subtitle-cue-row > button svg { width: 14px; height: 14px; }
+.subtitle-editor-empty { min-height: 260px; display: grid; place-items: center; align-content: center; gap: 6px; color: #85899c; text-align: center; }
+.subtitle-editor-empty strong { color: var(--ink); font-size: 14px; }
+.subtitle-editor-empty p { margin: 0 0 8px; font-size: 9px; }
+.subtitle-editor-panel > footer { margin: 0; min-height: 66px; padding: 10px 18px; align-items: center; justify-content: space-between; background: #fff; }
+#subtitle-editor-status { color: #898d9e; font-size: 9px; }
+.subtitle-export-buttons { display: flex; align-items: center; gap: 7px; }
+@media (max-width: 760px) {
+  .subtitle-editor-modal { align-items: flex-end; padding: 0; }
+  .subtitle-editor-panel { width: 100%; height: 94vh; max-height: 94vh; border-radius: 20px 20px 0 0; }
+  .subtitle-toolbar { flex-wrap: wrap; padding-inline: 10px; }
+  .subtitle-shift { width: 100%; margin-left: 0; }
+  .subtitle-shift input { flex: 1; }
+  .subtitle-table-head { display: none; }
+  .subtitle-cue-row { grid-template-columns: 28px minmax(0,1fr) minmax(0,1fr) 34px; gap: 7px; padding: 10px; }
+  .subtitle-cue-row textarea { grid-column: 2 / -1; }
+  .subtitle-editor-panel > footer { flex-direction: column; align-items: stretch; gap: 8px; padding: 10px; }
+  .subtitle-export-buttons { display: grid; grid-template-columns: repeat(3,1fr); }
+  .subtitle-export-buttons #subtitle-save-all { grid-column: 1 / -1; }
+  #subtitle-editor-status { text-align: center; }
+}
+.trim-preview-controls { margin: 0 18px 10px; padding: 9px 10px; display: flex; align-items: center; gap: 8px; color: #73778a; background: #f7f7fb; border: 1px solid var(--line); border-radius: 10px; font-size: 8px; }
+.trim-preview-controls label { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.trim-preview-controls input, .trim-preview-controls select { width: 68px; height: 30px; padding: 0 7px; background: #fff; border: 1px solid var(--line-strong); border-radius: 7px; }
+#trim-preview-status { margin-left: auto; color: #6860cf; font-weight: 700; }
+@media (max-width: 680px) { .trim-preview-controls { margin-inline: 10px; flex-wrap: wrap; } #trim-preview-status { width: 100%; margin-left: 0; } }

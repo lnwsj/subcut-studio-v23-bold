@@ -1,0 +1,22 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SJ88 SubCut Studio 2.3 Bold — QA</title><style>
+:root{font-family:Inter,"Noto Sans Thai",system-ui,sans-serif;color:#171a2f;background:#f4f6fb}body{margin:0}.wrap{max-width:1160px;margin:auto;padding:42px 24px 80px}h1{font-size:38px;margin:0 0 8px}h2{margin-top:38px}.lead{color:#60677d;font-size:18px}.pass{display:inline-block;padding:8px 13px;border-radius:999px;background:#ddf8eb;color:#087b51;font-weight:800}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}.card{background:#fff;border:1px solid #e0e5f0;border-radius:18px;padding:20px;box-shadow:0 8px 26px #2027440b}.card b{font-size:24px;display:block}.card small{color:#70778c}.shots{display:grid;grid-template-columns:1fr 1fr;gap:18px}.shots figure{margin:0;background:#fff;border:1px solid #e0e5f0;border-radius:18px;overflow:hidden}.shots img{display:block;width:100%}.shots figcaption{padding:12px 16px;font-weight:700}table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden}th,td{text-align:left;padding:13px;border-bottom:1px solid #edf0f6}code{background:#eceffd;padding:2px 6px;border-radius:6px}.note{background:#fff7df;border:1px solid #f4d67d;border-radius:14px;padding:16px}a{color:#5b42e8}@media(max-width:760px){.grid,.shots{grid-template-columns:1fr}h1{font-size:30px}}</style></head><body><main class="wrap">
+<span class="pass">PASS_WITH_DEPLOYMENT_NOTES</span><h1>SJ88 SubCut Studio 2.3 Bold</h1><p class="lead">QA ครอบคลุม Live API, FFmpeg จริง, Web/Worker แยกโปรเซส และ UI Desktop/Mobile</p>
+<section class="grid"><div class="card"><b>4/4</b><small>Subtitle unit tests</small></div><div class="card"><b>0</b><small>Console / Page errors</small></div><div class="card"><b>0 px</b><small>Horizontal overflow</small></div></section>
+<h2>หน้าจอที่ตรวจแล้ว</h2><section class="shots">
+<figure><img src="screenshots/bold-desktop-work-center-viewport.png"><figcaption>ศูนย์งาน + Upload Dock + SSE</figcaption></figure>
+<figure><img src="screenshots/bold-desktop-download-center.png"><figcaption>Download Center</figcaption></figure>
+<figure><img src="screenshots/bold-desktop-subtitle-editor.png"><figcaption>Subtitle Editor Lite</figcaption></figure>
+<figure><img src="screenshots/bold-desktop-trim-preview.png"><figcaption>Trim Preview + Waveform</figcaption></figure>
+<figure><img src="screenshots/bold-desktop-notifications.png"><figcaption>Notification Center</figcaption></figure>
+<figure><img src="screenshots/bold-mobile-subtitle-editor.png"><figcaption>Mobile Subtitle Editor</figcaption></figure>
+</section>
+<h2>ผลทดสอบหลัก</h2><table><tr><th>ส่วน</th><th>ผล</th><th>หลักฐาน</th></tr>
+<tr><td>Bold Hub / Library / Sync</td><td>PASS</td><td><code>api/bold-v2.3-integration.json</code></td></tr>
+<tr><td>Desktop / Mobile UI</td><td>PASS</td><td><code>api/bold-browser-qa.json</code></td></tr>
+<tr><td>Subtitle + 15s Trim Preview</td><td>PASS</td><td><code>api/subtitle-editor-trim-preview.json</code></td></tr>
+<tr><td>Editor/Preview Browser UI</td><td>PASS</td><td><code>api/bold-editor-preview-browser-qa.json</code></td></tr>
+<tr><td>Separated Web / Worker</td><td>PASS</td><td><code>api/split-web-worker.json</code></td></tr></table>
+<h2>Fidelity checks</h2><p>ตรวจเทียบระบบภาพเดิมกับรุ่น Bold ผ่านภาพจริง: brand/sidebar, palette, typography, hierarchy ของสถานะ, modal spacing, navigation state, responsive collapse และข้อความเหนือ fold ไม่มี drift ที่เป็นสาระสำคัญ</p>
+<h2>Deployment notes</h2><div class="note">Whisper GPU ไม่ได้รันในเครื่อง QA รอบนี้; Docker CLI ไม่มีจึง parse Compose YAML และทดสอบ topology ด้วยโปรเซสจริง; LINE/Email เป็น provider preferences สำหรับต่อระบบส่งขององค์กร</div>
+<p><a href="report.md">อ่านรายงาน Markdown</a> · <a href="summary.json">Summary JSON</a> · <a href="test_matrix.json">Test matrix</a></p>
+</main></body></html>

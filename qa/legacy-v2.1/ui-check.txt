@@ -1,0 +1,13 @@
+title= SJ88 SubCut Studio 2.1.0
+auth_gate_initial= hidden
+guest_banner_desktop= visible
+guest_signup_modal= optional
+guest_queue_visible= true
+signup_keeps_queue_visible= true
+mobile_guest_banner= visible
+mobile_sidebar_open= true
+mobile_overflow_px= 0
+console_count= 0
+page_errors_count= 0
+render_method= Playwright set_content with production HTML/CSS/JS + deterministic API mock
+http_backend_method= live Uvicorn + httpx
