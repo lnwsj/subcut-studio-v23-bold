@@ -1,0 +1,50 @@
+[Script Info]
+ScriptType: v4.00+
+; AutoSuTemplateRequested: instagram
+; AutoSuTemplateResolved: instagram
+; AutoSuTemplateRandomized: false
+; AutoSuTemplateRandomSeed: 
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,NotoSansThai-Regular,78,&H00D326C0&,&H00B672F4&,&H00FFFFFF&,&H4C000000&,1,0,0,0,100,100,0,0,1,4,3,5,20,20,0,1
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:00.62,0:00:01.26,Default,,0,0,0,,{\an5\pos(540,1555)}ไหนครับใคร
+Dialogue: 0,0:00:01.26,0:00:01.91,Default,,0,0,0,,{\an5\pos(540,1555)}รอโปร
+Dialogue: 0,0:00:01.91,0:00:02.55,Default,,0,0,0,,{\an5\pos(540,1555)}ดราคา
+Dialogue: 0,0:00:02.55,0:00:03.19,Default,,0,0,0,,{\an5\pos(540,1555)}มาแล้วครับ
+Dialogue: 0,0:00:03.19,0:00:03.83,Default,,0,0,0,,{\an5\pos(540,1555)}กับไฟโซ
+Dialogue: 0,0:00:03.83,0:00:04.48,Default,,0,0,0,,{\an5\pos(540,1555)}ราเซล
+Dialogue: 0,0:00:04.48,0:00:05.12,Default,,0,0,0,,{\an5\pos(540,1555)}ตัวนี้
+Dialogue: 0,0:00:05.12,0:00:05.94,Default,,0,0,0,,{\an5\pos(540,1555)}เป็นไฟโซ
+Dialogue: 0,0:00:05.94,0:00:06.77,Default,,0,0,0,,{\an5\pos(540,1555)}ราเซล
+Dialogue: 0,0:00:06.77,0:00:07.59,Default,,0,0,0,,{\an5\pos(540,1555)}รุ่นแปดหมื่น
+Dialogue: 0,0:00:07.59,0:00:08.41,Default,,0,0,0,,{\an5\pos(540,1555)}wrตัวนี้
+Dialogue: 0,0:00:08.41,0:00:09.24,Default,,0,0,0,,{\an5\pos(540,1555)}ถือว่าเป็น
+Dialogue: 0,0:00:09.24,0:00:10.06,Default,,0,0,0,,{\an5\pos(540,1555)}ราคาย่อม
+Dialogue: 0,0:00:10.06,0:00:10.88,Default,,0,0,0,,{\an5\pos(540,1555)}ยาวติดตลอด
+Dialogue: 0,0:00:10.88,0:00:11.71,Default,,0,0,0,,{\an5\pos(540,1555)}คืนผมชอบ
+Dialogue: 0,0:00:11.71,0:00:12.53,Default,,0,0,0,,{\an5\pos(540,1555)}ตรงที่ไฟ
+Dialogue: 0,0:00:12.53,0:00:13.36,Default,,0,0,0,,{\an5\pos(540,1555)}สถานะมัน
+Dialogue: 0,0:00:13.36,0:00:14.18,Default,,0,0,0,,{\an5\pos(540,1555)}เป็นไฟแยก
+Dialogue: 0,0:00:14.46,0:00:15.02,Default,,0,0,0,,{\an5\pos(540,1555)}กลางวันมัน
+Dialogue: 0,0:00:15.02,0:00:15.59,Default,,0,0,0,,{\an5\pos(540,1555)}ก็จะชาร์จ
+Dialogue: 0,0:00:15.59,0:00:16.15,Default,,0,0,0,,{\an5\pos(540,1555)}กลางคืนมัน
+Dialogue: 0,0:00:16.15,0:00:16.72,Default,,0,0,0,,{\an5\pos(540,1555)}ก็จะติด
+Dialogue: 0,0:00:16.72,0:00:17.28,Default,,0,0,0,,{\an5\pos(540,1555)}เองเนี่ย
+Dialogue: 0,0:00:17.28,0:00:17.73,Default,,0,0,0,,{\an5\pos(540,1555)}เวลาติด
+Dialogue: 0,0:00:17.73,0:00:18.17,Default,,0,0,0,,{\an5\pos(540,1555)}ตั้งเอาแผง
+Dialogue: 0,0:00:18.17,0:00:18.62,Default,,0,0,0,,{\an5\pos(540,1555)}ไว้บนหลัง
+Dialogue: 0,0:00:18.62,0:00:19.06,Default,,0,0,0,,{\an5\pos(540,1555)}คา
+Dialogue: 0,0:00:19.84,0:00:20.36,Default,,0,0,0,,{\an5\pos(540,1555)}ใครสนใจ
+Dialogue: 0,0:00:20.36,0:00:20.89,Default,,0,0,0,,{\an5\pos(540,1555)}ครับตัวนี้
+Dialogue: 0,0:00:20.89,0:00:21.41,Default,,0,0,0,,{\an5\pos(540,1555)}ราคาไม่
+Dialogue: 0,0:00:21.41,0:00:21.93,Default,,0,0,0,,{\an5\pos(540,1555)}แพงผมปัก
+Dialogue: 0,0:00:21.93,0:00:22.46,Default,,0,0,0,,{\an5\pos(540,1555)}ตะกร้าฮะ
+Dialogue: 0,0:00:22.46,0:00:22.98,Default,,0,0,0,,{\an5\pos(540,1555)}ละครับ

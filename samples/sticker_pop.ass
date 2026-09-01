@@ -1,0 +1,50 @@
+[Script Info]
+ScriptType: v4.00+
+; AutoSuTemplateRequested: sticker_pop
+; AutoSuTemplateResolved: sticker_pop
+; AutoSuTemplateRandomized: false
+; AutoSuTemplateRandomSeed: 
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,NotoSansThai-Regular,100,&H00FFFFFF&,&H004DE8FF&,&H00111111&,&H00000000&,1,0,0,0,100,100,0,0,1,8,4,5,20,20,0,1
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:00.56,0:00:01.36,Default,,0,0,0,,{\an5\pos(540,1555)}ใครรอโปร
+Dialogue: 0,0:00:01.36,0:00:02.16,Default,,0,0,0,,{\an5\pos(540,1555)}ลดราคา
+Dialogue: 0,0:00:02.16,0:00:02.95,Default,,0,0,0,,{\an5\pos(540,1555)}มาละครับ
+Dialogue: 0,0:00:02.95,0:00:03.75,Default,,0,0,0,,{\an5\pos(540,1555)}กับไฟโซ
+Dialogue: 0,0:00:03.75,0:00:04.55,Default,,0,0,0,,{\an5\pos(540,1555)}ร่าเซล
+Dialogue: 0,0:00:04.55,0:00:05.35,Default,,0,0,0,,{\an5\pos(540,1555)}ตัวนี้เป็น
+Dialogue: 0,0:00:05.35,0:00:06.14,Default,,0,0,0,,{\an5\pos(540,1555)}ไฟโซร่า
+Dialogue: 0,0:00:06.14,0:00:06.94,Default,,0,0,0,,{\an5\pos(540,1555)}เซลรุ่น
+Dialogue: 0,0:00:06.94,0:00:07.74,Default,,0,0,0,,{\an5\pos(540,1555)}80,000
+Dialogue: 0,0:00:07.74,0:00:08.58,Default,,0,0,0,,{\an5\pos(540,1555)}ตัวนี้ถือ
+Dialogue: 0,0:00:08.58,0:00:09.43,Default,,0,0,0,,{\an5\pos(540,1555)}ว่าเป็นรา
+Dialogue: 0,0:00:09.43,0:00:10.27,Default,,0,0,0,,{\an5\pos(540,1555)}คาย่อมเยาว์
+Dialogue: 0,0:00:10.27,0:00:11.11,Default,,0,0,0,,{\an5\pos(540,1555)}ติดตลอดคืน
+Dialogue: 0,0:00:11.11,0:00:11.96,Default,,0,0,0,,{\an5\pos(540,1555)}ผมชอบตรง
+Dialogue: 0,0:00:11.96,0:00:12.80,Default,,0,0,0,,{\an5\pos(540,1555)}ที่ไฟlen
+Dialogue: 0,0:00:12.80,0:00:13.30,Default,,0,0,0,,{\an5\pos(540,1555)}แต่legeา
+Dialogue: 0,0:00:13.30,0:00:13.80,Default,,0,0,0,,{\an5\pos(540,1555)}หานะมัน
+Dialogue: 0,0:00:13.80,0:00:14.29,Default,,0,0,0,,{\an5\pos(540,1555)}เป็นไฟแยก
+Dialogue: 0,0:00:14.29,0:00:14.79,Default,,0,0,0,,{\an5\pos(540,1555)}กลางวันมัน
+Dialogue: 0,0:00:14.79,0:00:15.29,Default,,0,0,0,,{\an5\pos(540,1555)}จะช้าท
+Dialogue: 0,0:00:15.29,0:00:15.79,Default,,0,0,0,,{\an5\pos(540,1555)}Elleเบาะก้าน
+Dialogue: 0,0:00:15.79,0:00:16.28,Default,,0,0,0,,{\an5\pos(540,1555)}คืนมันก็
+Dialogue: 0,0:00:16.28,0:00:16.78,Default,,0,0,0,,{\an5\pos(540,1555)}ติดนะ
+Dialogue: 0,0:00:16.78,0:00:17.40,Default,,0,0,0,,{\an5\pos(540,1555)}เองเนี่ยเว
+Dialogue: 0,0:00:17.40,0:00:18.02,Default,,0,0,0,,{\an5\pos(540,1555)}ลาติดตั้ง
+Dialogue: 0,0:00:18.02,0:00:18.63,Default,,0,0,0,,{\an5\pos(540,1555)}เอาแผงไว้
+Dialogue: 0,0:00:18.63,0:00:19.25,Default,,0,0,0,,{\an5\pos(540,1555)}บนหลังคา
+Dialogue: 0,0:00:19.25,0:00:19.87,Default,,0,0,0,,{\an5\pos(540,1555)}ใครสนใจ
+Dialogue: 0,0:00:19.87,0:00:20.49,Default,,0,0,0,,{\an5\pos(540,1555)}ครับตัวนี้
+Dialogue: 0,0:00:20.49,0:00:21.11,Default,,0,0,0,,{\an5\pos(540,1555)}ราคาไม่
+Dialogue: 0,0:00:21.11,0:00:21.72,Default,,0,0,0,,{\an5\pos(540,1555)}แพงผมปาก
+Dialogue: 0,0:00:21.72,0:00:22.34,Default,,0,0,0,,{\an5\pos(540,1555)}ตะก้าแหละ
+Dialogue: 0,0:00:22.34,0:00:22.96,Default,,0,0,0,,{\an5\pos(540,1555)}ครับ

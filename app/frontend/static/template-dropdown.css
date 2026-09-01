@@ -299,3 +299,27 @@
 /* --- Scoped under the form field to align --- */
 .field .template-dd { display: block; width: 100%; }
 .field > span + .template-dd { margin-top: 6px; }
+
+/* ============================================================
+   New 19 templates (2026-09-01) - ported from CaptionCut Studio
+   All use simple emoji/character previews with color-coded backgrounds
+   ============================================================ */
+.preview--outline { background: #1a1530; color: #ffffff; font-weight: 800; -webkit-text-stroke: 2px #000; text-shadow: 0 0 0 #000; font-size: 14px; }
+.preview--neon { background: #0a1a2e; color: #7DF9FF; text-shadow: 0 0 6px #7DF9FF, 0 0 12px #0057FF; font-weight: 800; font-size: 13px; }
+.preview--blue_glow { background: #001A3D; color: #ffffff; text-shadow: 0 0 4px #1597FF, 0 0 8px #1597FF; font-weight: 800; font-size: 14px; }
+.preview--sticker { background: #ffffff; color: #111; border: 3px solid #FF2E8A; border-radius: 6px; font-weight: 800; font-size: 12px; padding: 0 4px; }
+.preview--green_pop { background: #001B09; color: #8CFF4D; text-shadow: 0 0 4px #8CFF4D; font-weight: 800; font-size: 13px; }
+.preview--red_alert { background: #2A0008; color: #ffffff; border: 2px solid #E11D48; font-weight: 900; font-size: 18px; }
+.preview--purple_punch { background: #14001F; color: #F5D0FE; text-shadow: 0 0 4px #7E22CE; font-weight: 800; font-size: 13px; }
+.preview--cyan_ice { background: linear-gradient(135deg, #001018 0%, #0891B2 100%); color: #E0FBFF; font-weight: 800; font-size: 18px; }
+.preview--orange_sale { background: #1F0700; color: #FFB703; font-weight: 900; font-size: 16px; }
+.preview--white_shadow { background: #ffffff; color: #1F2937; text-shadow: 1px 1px 2px #999; font-weight: 700; font-size: 13px; }
+.preview--black_label { background: #000000; color: #ffffff; border: 2px solid #FDE68A; font-weight: 800; font-size: 14px; }
+.preview--retro_pixel { background: #2d1b00; color: #FFB703; font-family: 'Courier New', monospace; font-weight: 900; font-size: 11px; letter-spacing: -1px; }
+.preview--soft_pastel { background: linear-gradient(135deg, #fce7f3 0%, #ddd6fe 100%); color: #831843; font-weight: 600; font-size: 14px; }
+.preview--lime_pop { background: #071400; color: #D9F99D; text-shadow: 0 0 4px #8CFF4D; font-weight: 800; font-size: 14px; }
+.preview--news_ticker { background: linear-gradient(180deg, #1a1530 0%, #2d2350 100%); color: #FFD700; font-weight: 800; font-size: 18px; border-bottom: 2px solid #FFD700; }
+.preview--bold_thunder { background: #000000; color: #ffffff; font-weight: 900; font-size: 24px; -webkit-text-stroke: 1px #000; text-shadow: 0 2px 0 #000; }
+.preview--sticker_pop { background: #ffffff; color: #111; border: 4px solid #FF2E8A; border-radius: 12px; font-weight: 900; font-size: 16px; }
+.preview--instagram { background: linear-gradient(135deg, #C026D3 0%, #F472B6 100%); color: #ffffff; font-weight: 800; font-size: 18px; -webkit-text-stroke: 1px #fff; }
+.preview--subtitle_heavy { background: #0a0a0a; color: #ffffff; font-weight: 800; font-size: 14px; letter-spacing: 3px; text-shadow: 0 0 5px #000, 2px 2px 0 #000; }

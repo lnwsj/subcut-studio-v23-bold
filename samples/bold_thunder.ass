@@ -1,0 +1,47 @@
+[Script Info]
+ScriptType: v4.00+
+; AutoSuTemplateRequested: bold_thunder
+; AutoSuTemplateResolved: bold_thunder
+; AutoSuTemplateRandomized: false
+; AutoSuTemplateRandomSeed: 
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,NotoSansThai-Regular,150,&H00FFFFFF&,&H004DE8FF&,&H00000000&,&H33000000&,1,0,0,0,110,100,0,0,1,7,5,5,20,20,0,1
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:00.56,0:00:01.38,Default,,0,0,0,,{\an5\pos(540,1555)}ใครรอโปรด
+Dialogue: 0,0:00:01.38,0:00:02.21,Default,,0,0,0,,{\an5\pos(540,1555)}ลาคามา
+Dialogue: 0,0:00:02.21,0:00:03.03,Default,,0,0,0,,{\an5\pos(540,1555)}แล้วครับกับ
+Dialogue: 0,0:00:03.03,0:00:03.86,Default,,0,0,0,,{\an5\pos(540,1555)}ไฟโซล่า
+Dialogue: 0,0:00:03.86,0:00:04.68,Default,,0,0,0,,{\an5\pos(540,1555)}เซล
+Dialogue: 0,0:00:04.68,0:00:05.43,Default,,0,0,0,,{\an5\pos(540,1555)}ตัวนี้เป็น
+Dialogue: 0,0:00:05.43,0:00:06.18,Default,,0,0,0,,{\an5\pos(540,1555)}ไฟโซล่า
+Dialogue: 0,0:00:06.18,0:00:06.94,Default,,0,0,0,,{\an5\pos(540,1555)}เซลรุ่น
+Dialogue: 0,0:00:06.94,0:00:07.69,Default,,0,0,0,,{\an5\pos(540,1555)}80,000ตัวCompetos
+Dialogue: 0,0:00:07.69,0:00:08.44,Default,,0,0,0,,{\an5\pos(540,1555)}WR
+Dialogue: 0,0:00:08.80,0:00:09.73,Default,,0,0,0,,{\an5\pos(540,1555)}เป็นราคา
+Dialogue: 0,0:00:09.73,0:00:10.67,Default,,0,0,0,,{\an5\pos(540,1555)}ย่อมเยาว์ติด
+Dialogue: 0,0:00:10.67,0:00:11.60,Default,,0,0,0,,{\an5\pos(540,1555)}ตลอดคืน
+Dialogue: 0,0:00:11.60,0:00:12.46,Default,,0,0,0,,{\an5\pos(540,1555)}ชอบตรงที่
+Dialogue: 0,0:00:12.46,0:00:13.32,Default,,0,0,0,,{\an5\pos(540,1555)}ไฟสถานะ
+Dialogue: 0,0:00:13.32,0:00:14.18,Default,,0,0,0,,{\an5\pos(540,1555)}เป็นไฟแยก
+Dialogue: 0,0:00:14.18,0:00:14.89,Default,,0,0,0,,{\an5\pos(540,1555)}กลางวันมัน
+Dialogue: 0,0:00:14.89,0:00:15.60,Default,,0,0,0,,{\an5\pos(540,1555)}จะชาร์จกลาง
+Dialogue: 0,0:00:15.60,0:00:16.31,Default,,0,0,0,,{\an5\pos(540,1555)}คืนจะติด
+Dialogue: 0,0:00:16.31,0:00:17.02,Default,,0,0,0,,{\an5\pos(540,1555)}เอง
+Dialogue: 0,0:00:17.28,0:00:17.72,Default,,0,0,0,,{\an5\pos(540,1555)}เวลาติด
+Dialogue: 0,0:00:17.72,0:00:18.16,Default,,0,0,0,,{\an5\pos(540,1555)}ตั้งเอาแผง
+Dialogue: 0,0:00:18.16,0:00:18.60,Default,,0,0,0,,{\an5\pos(540,1555)}ไปบนหลัง
+Dialogue: 0,0:00:18.60,0:00:19.04,Default,,0,0,0,,{\an5\pos(540,1555)}คา
+Dialogue: 0,0:00:19.68,0:00:20.23,Default,,0,0,0,,{\an5\pos(540,1555)}ใครสนใจ
+Dialogue: 0,0:00:20.23,0:00:20.77,Default,,0,0,0,,{\an5\pos(540,1555)}ครับตัวนี้
+Dialogue: 0,0:00:20.77,0:00:21.32,Default,,0,0,0,,{\an5\pos(540,1555)}ราคาไม่
+Dialogue: 0,0:00:21.32,0:00:21.87,Default,,0,0,0,,{\an5\pos(540,1555)}แพงผมปัก
+Dialogue: 0,0:00:21.87,0:00:22.41,Default,,0,0,0,,{\an5\pos(540,1555)}ตัดกล้าย
+Dialogue: 0,0:00:22.41,0:00:22.96,Default,,0,0,0,,{\an5\pos(540,1555)}ให้ละครับ

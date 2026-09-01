@@ -1,0 +1,46 @@
+[Script Info]
+ScriptType: v4.00+
+; AutoSuTemplateRequested: news_ticker
+; AutoSuTemplateResolved: news_ticker
+; AutoSuTemplateRandomized: false
+; AutoSuTemplateRandomSeed: 
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Default,NotoSansThai-Regular,52,&H00FFFFFF&,&H0000D7FF&,&H00000000&,&H99000000&,1,0,0,0,100,100,0,0,3,2,1,5,20,20,0,1
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:00.56,0:00:01.40,Default,,0,0,0,,{\an5\pos(540,1555)}ใครรอโปรด
+Dialogue: 0,0:00:01.40,0:00:02.24,Default,,0,0,0,,{\an5\pos(540,1555)}ละคามา
+Dialogue: 0,0:00:02.24,0:00:03.08,Default,,0,0,0,,{\an5\pos(540,1555)}แล้วครับกับ
+Dialogue: 0,0:00:03.08,0:00:03.92,Default,,0,0,0,,{\an5\pos(540,1555)}ไฟโซล่า
+Dialogue: 0,0:00:03.92,0:00:04.76,Default,,0,0,0,,{\an5\pos(540,1555)}duringtheday
+Dialogue: 0,0:00:04.76,0:00:05.32,Default,,0,0,0,,{\an5\pos(540,1555)}традиcarrouselตัว
+Dialogue: 0,0:00:05.32,0:00:05.87,Default,,0,0,0,,{\an5\pos(540,1555)}นี้เป็นไฟ
+Dialogue: 0,0:00:05.87,0:00:06.43,Default,,0,0,0,,{\an5\pos(540,1555)}โซล่าเซ
+Dialogue: 0,0:00:06.43,0:00:06.99,Default,,0,0,0,,{\an5\pos(540,1555)}ลลูญ
+Dialogue: 0,0:00:06.99,0:00:07.54,Default,,0,0,0,,{\an5\pos(540,1555)}แปดหมื่นทุก
+Dialogue: 0,0:00:07.54,0:00:08.10,Default,,0,0,0,,{\an5\pos(540,1555)}ทีJeder
+Dialogue: 0,0:00:08.10,0:00:08.73,Default,,0,0,0,,{\an5\pos(540,1555)}อยู่ตัวนี้
+Dialogue: 0,0:00:08.73,0:00:09.35,Default,,0,0,0,,{\an5\pos(540,1555)}ถือว่าเป็น
+Dialogue: 0,0:00:09.35,0:00:09.98,Default,,0,0,0,,{\an5\pos(540,1555)}ราคาย่อม
+Dialogue: 0,0:00:09.98,0:00:10.60,Default,,0,0,0,,{\an5\pos(540,1555)}เยาว์ติดตลอด
+Dialogue: 0,0:00:10.60,0:00:11.23,Default,,0,0,0,,{\an5\pos(540,1555)}เคคืออา
+Dialogue: 0,0:00:11.23,0:00:11.86,Default,,0,0,0,,{\an5\pos(540,1555)}ผมชอบเรา
+Dialogue: 0,0:00:11.86,0:00:12.48,Default,,0,0,0,,{\an5\pos(540,1555)}ต้องที่ฟาย
+Dialogue: 0,0:00:12.48,0:00:13.11,Default,,0,0,0,,{\an5\pos(540,1555)}เศรษฐรนะ
+Dialogue: 0,0:00:13.11,0:00:13.73,Default,,0,0,0,,{\an5\pos(540,1555)}มันเป็นไฟ
+Dialogue: 0,0:00:13.73,0:00:14.36,Default,,0,0,0,,{\an5\pos(540,1555)}แยกPlace
+Dialogue: 0,0:00:14.36,0:00:15.51,Default,,0,0,0,,{\an5\pos(540,1555)}กางวันมัน
+Dialogue: 0,0:00:15.51,0:00:16.66,Default,,0,0,0,,{\an5\pos(540,1555)}ก็จะชาร์จ
+Dialogue: 0,0:00:16.66,0:00:17.80,Default,,0,0,0,,{\an5\pos(540,1555)}กันคืนมัน
+Dialogue: 0,0:00:17.80,0:00:18.95,Default,,0,0,0,,{\an5\pos(540,1555)}ก็จะศึก
+Dialogue: 0,0:00:18.95,0:00:20.10,Default,,0,0,0,,{\an5\pos(540,1555)}เองอ่ะเว
+Dialogue: 0,0:00:20.10,0:00:21.25,Default,,0,0,0,,{\an5\pos(540,1555)}ลาคุยตั้ง
+Dialogue: 0,0:00:21.25,0:00:22.39,Default,,0,0,0,,{\an5\pos(540,1555)}ออแผงไว้
+Dialogue: 0,0:00:22.39,0:00:23.54,Default,,0,0,0,,{\an5\pos(540,1555)}บน

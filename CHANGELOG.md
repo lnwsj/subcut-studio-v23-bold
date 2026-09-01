@@ -26,3 +26,29 @@
 ## 2.0.0 — Standalone SubCut Studio
 
 - UI ใหม่, Chunk upload, SQLite/MySQL, Worker, History และ Download
+
+## 2.3.1 — 26 Subtitle Templates + Thai Word Grouping (2026-09-01)
+
+### Subtitle Catalog
+- เพิ่ม 5 เทมเพลตใหม่: News Ticker, Bold Thunder, Sticker Pop, Instagram, Subtitle Heavy
+- รวมเทมเพลตทั้งหมด 26 แบบ (เดิม 21 + ใหม่ 5)
+- อัปเดต `AUTOSU_SUBTITLE_TEMPLATE_CATALOG` ใน `autosu_settings.py` ให้มี 26 รายการ
+- เพิ่ม style block ทั้ง 5 ใน `autosu_runner.py` presets dict
+- เพิ่ม 19 รายการใหม่ใน custom template-dropdown (TEMPLATES array + CSS preview swatches)
+- ทุกสไตล์ผ่าน E2E บนวิดีโอไทย 23.6s
+
+### Thai Word Grouping (ported from CaptionCut Studio)
+- เพิ่ม `_merge_thai_words()` ใช้ PyThaiNLP `word_tokenize(engine="newmm")` 
+- แปลง Whisper fragment ("ใ" + "คร" + "ร" + "อ") → คำเต็ม ("ใคร", "รอ")
+- Hook อัตโนมัติเมื่อ `language.startswith("th")`
+- ใช้ Thai Unicode range `\u0e01`-`\u0e5b` (ไม่ใช่ 0x0e00 ซึ่งเป็น control char)
+- ตรวจพบ 0 regression — ภาษาอื่นไม่เปลี่ยน behavior
+
+### UI
+- Native `<select id="subtitle-template">` มี 26 options (เดิม 7)
+- Custom dropdown แสดง preview swatch 26 แบบ
+- ตัวอย่าง 5 ใหม่มี emoji นำหน้า: 📰 News Ticker, ⚡ Bold Thunder, 🎯 Sticker Pop, 📸 Instagram, 🎬 Subtitle Heavy
+
+### Branded & Verified
+- Cutdee brand (logo + favicon) คงอยู่บน SubCut v2.3
+- SubCut v2.3 ทำงานบน `https://subfree.cutdee.com/` (Let's Encrypt SSL)

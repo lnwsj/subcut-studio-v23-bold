@@ -857,6 +857,69 @@ def _subtitle_template_style(settings: AutoSuSettings, input_video: Path | None 
             "bold": 1,
             "font_size": min(160, base_size + 3),
         },
+        "news_ticker": {
+            "primary": _to_ass_color("#FFFFFF", 0),
+            "secondary": _to_ass_color("#FFD700", 0),
+            "outline": _to_ass_color("#000000", 0),
+            "back": _to_ass_color("#000000", 60),
+            "outline_size": 2,
+            "shadow_size": 1,
+            "border_style": 3,
+            "bold": 1,
+            "font_size": 52,
+            "alignment": 2,
+            "margin_v": 200,
+        },
+        "bold_thunder": {
+            "primary": _to_ass_color("#FFFFFF", 0),
+            "outline": _to_ass_color("#000000", 0),
+            "back": _to_ass_color("#000000", 20),
+            "outline_size": 7,
+            "shadow_size": 5,
+            "border_style": 1,
+            "bold": 1,
+            "font_size": 150,
+            "alignment": 5,
+            "margin_v": 0,
+            "scale_x": 110,
+        },
+        "sticker_pop": {
+            "primary": _to_ass_color("#FFFFFF", 0),
+            "secondary": _to_ass_color("#FFE84D", 0),
+            "outline": _to_ass_color("#111111", 0),
+            "back": _to_ass_color("#000000", 0),
+            "outline_size": 8,
+            "shadow_size": 4,
+            "border_style": 1,
+            "bold": 1,
+            "font_size": 100,
+            "alignment": 2,
+        },
+        "instagram": {
+            "primary": _to_ass_color("#C026D3", 0),
+            "secondary": _to_ass_color("#F472B6", 0),
+            "outline": _to_ass_color("#FFFFFF", 0),
+            "back": _to_ass_color("#000000", 30),
+            "outline_size": 4,
+            "shadow_size": 3,
+            "border_style": 1,
+            "bold": 1,
+            "font_size": 78,
+            "alignment": 2,
+        },
+        "subtitle_heavy": {
+            "primary": _to_ass_color("#FFFFFF", 0),
+            "secondary": _to_ass_color("#E0E0E0", 0),
+            "outline": _to_ass_color("#000000", 0),
+            "back": _to_ass_color("#000000", 10),
+            "outline_size": 3,
+            "shadow_size": 5,
+            "border_style": 1,
+            "bold": 1,
+            "font_size": 72,
+            "alignment": 2,
+            "spacing": 3,
+        },
     }
     resolved_template_id = requested_template_id
     randomized = requested_template_id == AUTOSU_RANDOM_TEMPLATE_ID
@@ -898,6 +961,87 @@ def _subtitle_template_style(settings: AutoSuSettings, input_video: Path | None 
     style["_randomized"] = bool(randomized)
     style["_random_seed"] = random_seed
     return style
+
+
+def _is_thai_char(ch: str) -> bool:
+    """Check if a character is in the Thai Unicode range (Ko Kai to Khomu)."""
+    return "\u0e01" <= ch <= "\u0e5b"
+
+
+def _merge_thai_words(words: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Merge Whisper's character-level Thai token timestamps into word-level timing.
+    
+    Whisper's Thai tokenizer breaks words into 1-2 char fragments
+    (["ใ", "คร", "ร", "อ"] instead of ["ใคร", "รอ"]). This is unusable for
+    karaoke-style word-by-word highlighting. PyThaiNLP's `word_tokenize` (newmm
+    engine) splits the concatenated text into real Thai words, then maps each
+    char fragment's start/end into the parent word's time range.
+    
+    Returns the input list unchanged if pythainlp is unavailable or no
+    valid Thai words are found.
+    """
+    if not words:
+        return []
+    try:
+        from pythainlp.tokenize import word_tokenize
+    except ImportError:
+        return words
+    # Build char position -> word index map (whitespace-stripped)
+    clean_chars: list[int] = []
+    clean_text = ""
+    for w_idx, w in enumerate(words):
+        wtext = str(w.get("word", "")).strip()
+        if not wtext:
+            continue
+        for ch in wtext:
+            clean_chars.append(w_idx)
+            clean_text += ch
+    if not clean_text:
+        return words
+    # Skip if no Thai characters (English/numbers don't need merge)
+    if not any(_is_thai_char(ch) for ch in clean_text):
+        return words
+    # Use PyThaiNLP to split into real Thai words
+    try:
+        thai_words = word_tokenize(clean_text, engine="newmm", keep_whitespace=False)
+    except Exception:
+        return words
+    if not thai_words:
+        return words
+    # Map each char back to its source fragment index
+    # Build cumulative char position -> source word index
+    word_indices: list[int] = []
+    for w_idx, w in enumerate(words):
+        wtext = str(w.get("word", "")).strip()
+        for _ in wtext:
+            word_indices.append(w_idx)
+    # For each PyThaiNLP word, find the char range in clean_text
+    merged: list[dict[str, Any]] = []
+    pos = 0
+    for tw in thai_words:
+        if not tw or not tw.strip():
+            continue
+        # Find this word in clean_text starting from pos
+        idx = clean_text.find(tw, pos)
+        if idx < 0:
+            # Skip if not found (shouldn't happen with proper tokenize)
+            continue
+        end_idx = idx + len(tw)
+        if end_idx > len(word_indices):
+            end_idx = len(word_indices)
+        if idx >= len(word_indices):
+            continue
+        # Sum the time range of all source fragments in this range
+        start = float(words[word_indices[idx]].get("start") or 0.0)
+        end = float(words[word_indices[end_idx - 1]].get("end") or start + 0.2)
+        merged.append({
+            "word": tw,
+            "start": start,
+            "end": end,
+            "probability": float(words[word_indices[idx]].get("probability") or 0.0),
+        })
+        pos = end_idx
+    return merged if merged else words
 
 
 def _wrap_words(words: list[dict[str, Any]], max_words_per_line: int) -> list[tuple[float, float, str]]:
@@ -1457,8 +1601,11 @@ def _extract_cues(
             "[AutoSu] thai grouping config: "
             f"max_syllables_per_line={max_syllables} max_words_per_line={max_words}"
         )
+    thai_merge_enabled = detected_language.startswith("th") or settings.language.lower().startswith("th")
     for seg in segments:
         words = list(seg.get("words") or [])
+        if thai_merge_enabled and words:
+            words = _merge_thai_words(words)
         if words and not prefer_segment_cues:
             if karaoke_enabled:
                 cues.extend(_wrap_words_karaoke(words, max_words_per_line=max_words))

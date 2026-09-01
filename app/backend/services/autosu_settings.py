@@ -35,6 +35,11 @@ AUTOSU_SUBTITLE_TEMPLATE_CATALOG: tuple[dict[str, str], ...] = (
     {"id": "retro_pixel", "name": "Retro Pixel", "sample_class": "pixel", "description": "Retro pixel headline."},
     {"id": "soft_pastel", "name": "Soft Pastel", "sample_class": "pastel", "description": "Soft pastel caption."},
     {"id": "lime_pop", "name": "Lime Pop", "sample_class": "lime", "description": "Bright lime social caption."},
+    {"id": "news_ticker", "name": "News Ticker", "sample_class": "news", "description": "ขาวล่างจอ แบบข่าวทีวี"},
+    {"id": "bold_thunder", "name": "Bold Thunder", "sample_class": "thunder", "description": "ตัวยักษ์ 150pt ดึงสายตาแรง"},
+    {"id": "sticker_pop", "name": "Sticker Pop", "sample_class": "sticker-pop", "description": "สติ๊กเกอร์การ์ตูน ขอบหนา 8px"},
+    {"id": "instagram", "name": "Instagram", "sample_class": "instagram", "description": "ม่วง→ชมพู สไตล์ IG 78pt"},
+    {"id": "subtitle_heavy", "name": "Subtitle Heavy", "sample_class": "heavy", "description": "ขาว เงาหนา 5 + spacing 3"},
     {"id": AUTOSU_RANDOM_TEMPLATE_ID, "name": "Random Mix", "sample_class": "random", "description": "Random preset plus small typography/color variation per output."},
 )
 
